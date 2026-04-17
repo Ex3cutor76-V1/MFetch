@@ -1,31 +1,39 @@
-# O que é o MFetch?
+# MFetch
 
-É um fetch que estive criando enquanto estava entediado, eu usei como inspiração os projetos neofetch e fastfetch, com o intuito de ser algo mais leve que só mostre as informações sobre o dispositivo usando em base o sistema inteiro, sem precisar de bibliotécas ou ser estiloso demais... No caso é um fetch que eu havia criado para ser minimalista e leve, como foi dito.
+## O que é o MFetch?
 
-# O que o Mfetch mostra?
+O MFetch é um fetch tool que desenvolvi enquanto estava entediado. Ele foi inspirado em projetos como Neofetch e Fastfetch, com o objetivo de ser uma ferramenta leve para exibir informações do sistema.
 
-| Titulo | Objetivo | 
-|-------------|-------------|
-| User | Nome do user no sistema |
-| OS | Sistema operacional do sistema |
-| Kernel | Versão do Kernel |
-| Packages | Lista de pacotes dpkg ou pacotes flatpak |
-| Arquitetura | Arquitetura do dispositivo |
-| Uptime | Quanto tempo o computador está ligado |
-| Date | Data de hoje |
-| CPU | CPU do dispositivo |
-| Resolution | Resolução do dispositivo |
-| RAM | Memória RAM do dispositivo |
-| Wifi/Ethernet | Conexão tanto wifi quanto a cabo |
-| Tor | Se está conectado a rede tor (Via systemd) |
-| Battery | Bateria |
-| Shell | Shell do sistema operacional |
-| Disk | Disco rígido (HD ou SSD) |
+A ideia é ser minimalista, sem dependências externas ou foco em estilização pesada — apenas mostrar informações essenciais do sistema de forma direta.
 
-# Compatibilidade:
+---
+
+## O que o MFetch mostra?
+
+| Título        | Objetivo |
+|--------------|----------|
+| User         | Nome do usuário no sistema |
+| OS           | Sistema operacional |
+| Kernel       | Versão do kernel |
+| Packages     | Pacotes instalados (dpkg/flatpak) |
+| Arquitetura  | Arquitetura do sistema |
+| Uptime       | Tempo de uso do sistema |
+| Date         | Data atual |
+| CPU          | Processador |
+| Resolution   | Resolução da tela |
+| RAM          | Uso de memória RAM |
+| WiFi/Ethernet| Status da conexão de rede |
+| Tor          | Status da conexão Tor (via systemd) |
+| Battery      | Nível da bateria |
+| Shell        | Shell em uso |
+| Disk         | Uso do disco |
+
+---
+
+## Compatibilidade
 
 Desenvolvido para Linux Desktop e funciona melhor em sistemas baseados em Debian/Ubuntu com systemd e ferramentas comuns instaladas.
 
-Aviso de alerta: Até pode funcionar parcialmente em outras distros Linux, mas alguns recursos podem não estar disponíveis dependendo do sistema (No caso necessitaria de ferramentas como: NetworkManager, dpkg, xrandr, systemd).
+Pode funcionar parcialmente em outras distribuições Linux, mas alguns recursos podem não estar disponíveis dependendo do sistema (como NetworkManager, dpkg, xrandr e systemd).
 
-Aviso Principal: Não funciona em Windows.
+❗ Não é compatível com Windows.
