@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+AMARELO=$(tput setaf 11)
+VERDE=$(tput setaf 10)
+VERMELHO=$(tput setaf 9)
+AZUL=$(tput setaf 12)
+RESET=$(tput sgr0)
+
+dpkg=$(dpkg --get-selections | wc -l)
+flatpak=$(flatpak list 2>/dev/null | wc -l)
+battery=$(cat /sys/class/power_supply/BAT0/capacity)
+
+echo "=============================="
+echo "           ${AMARELO}MFetch${RESET}"
+echo "=============================="
+
+echo "${AZUL}User${RESET}: $USER@$(hostname)"
+
+echo "${AZUL}OS${RESET}: $(lsb_release -ds)"
+
+echo "${AZUL}Kernel${RESET}:  $(uname -r)"
+
+echo "${AZUL}Packages${RESET}: dpkg $dpkg, flatpak $flatpak" 
+
+echo "${AZUL}Arquitetura${RESET}: $(uname -m)"
+
+echo "${AZUL}Uptime${RESET}: $(uptime -p)"
+
+echo "${AZUL}Date${RESET}: $(date)"
+
+echo "${AZUL}CPU${RESET}: $(awk -F': ' '/model name/ {print $2; exit}' /proc/cpuinfo)"
+
+echo "${AZUL}Resolution${RESET}: $(xrandr | grep '*' | awk '{print $1}')"
+
+echo "${AZUL}RAM${RESET}: $(free -h | awk 'NR==2 {print $3 " / " $2}')"
+
+echo "${AZUL}WiFi/Ethernet${RESET}: $(nmcli -t -f DEVICE,STATE,CONNECTION dev status | awk -F: '$2=="connected"{print $3; exit}')"
+
+if systemctl is-active --quiet tor@default 2>/dev/null; then
+    echo "${AZUL}Tor${RESET}: ${VERDE}ON${RESET}"
+else
+    echo "${AZUL}Tor${RESET}: ${VERMELHO}OFF${RESET}"
+fi
+
+if [[ "$battery" -ge 75 ]]; then
+echo "${AZUL}Battery${RESET}: ${VERDE}$battery%${RESET}"
+elif [[ "$battery" -ge 50 ]]; then
+echo "${AZUL}Battery${RESET}: ${AMARELO}$battery%${RESET}"
+else
+echo "${AZUL}Battery${RESET}: ${VERMELHO}$battery%${RESET}"
+fi
+
+echo "${AZUL}Shell${RESET}: $SHELL"
+
+echo "${AZUL}Disk${RESET}: $(df -h / | awk 'NR==2 {print $3 " / " $2 " (" $5 ")"}')"
+
+echo "=============================="
