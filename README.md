@@ -37,3 +37,13 @@ Desenvolvido para Linux Desktop e funciona melhor em sistemas baseados em Debian
 Pode funcionar parcialmente em outras distribuições Linux, mas alguns recursos podem não estar disponíveis dependendo do sistema (como NetworkManager, dpkg, xrandr e systemd).
 
 ❗ Não é compatível com Windows.
+
+## Instalação
+
+`` git clone https://github.com/Ex3cutor76-V1/MFetch.git ``
+
+`` cd MFetch/ ``
+
+`` sudo mv mfetch /usr/local/bin/ ``
+
+`` mfetch ``
