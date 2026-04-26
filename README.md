@@ -6,6 +6,10 @@ O MFetch é um fetch tool que desenvolvi enquanto estava entediado. Ele foi insp
 
 A ideia é ser minimalista, sem dependências externas ou foco em estilização pesada — apenas mostrar informações essenciais do sistema de forma direta.
 
+## Atualização
+
+A versão MFetch V2 agora permite que o user veja informações sobre a WM utilizada, além de ficar um pouco mais leve em hardware antigo e melhorando a compatibilidade.
+
 ---
 
 ## O que o MFetch mostra?
@@ -27,23 +31,69 @@ A ideia é ser minimalista, sem dependências externas ou foco em estilização 
 | Battery      | Nível da bateria |
 | Shell        | Shell em uso |
 | Disk         | Uso do disco |
-
+| WM           | Informação sobre |
 ---
 
 ## Compatibilidade
 
-Desenvolvido para Linux Desktop e funciona melhor em sistemas baseados em Debian/Ubuntu com systemd e ferramentas comuns instaladas.
+O Mfetch foi desenvolvido principalmente para Linux.
 
-Pode funcionar parcialmente em outras distribuições Linux, mas alguns recursos podem não estar disponíveis dependendo do sistema (como NetworkManager, dpkg, xrandr e systemd).
+## Linux
+Compatível com a maioria das distros Linux Desktop, incluindo:
 
+- Debian/Ubuntu ou derivados
+- Arch Linux
+- Fedora
+- OpenSuse
+
+### Suporte parcial
+Em algumas funcionalidades do Mfetch, pode não funcionar dependendo do sistema.
+
+- Informação de rede depende do Network Manager
+- Informação de resolução depende do xrandr (Ou conhecido como X11)
+- Já os status do Tor depende do systemd
+
+Caso queira instalar essas, use:
+
+### Se você for Debian/Ubuntu:
+
+```bash id="dep2"
+sudo apt update
+sudo apt install -y bash coreutils awk procps util-linux x11-xserver-utils network-manager systemd
+```
+### Se você for Arch Linux/Manjaro:
+
+```bash id="dep2"
+ sudo pacman -S bash coreutils gawk procps-ng util-linux xorg-xrandr networkmanager systemd
+```
+
+### Se você for Fedora:
+
+```bash id="dep2"
+sudo dnf install bash coreutils gawk procps util-linux xorg-x11-server-utils NetworkManager systemd
+```
+
+### Se você usa Termux:
+```bash id="dep2"
+pkg update
+pkg install bash coreutils gawk procps util-linux termux-tools
+```
+### Se você usa Windows 
 ❗ Não é compatível com Windows.
+
+A não ser que vocẽ use WSL
 
 ## Instalação
 
-`` git clone https://github.com/Ex3cutor76-V1/MFetch.git ``
-
-`` cd MFetch/ ``
-
-`` sudo mv mfetch /usr/local/bin/ ``
-
-`` mfetch ``
+```bash id="dep2"
+git clone https://github.com/Ex3cutor76-V1/MFetch.git ``
+``` 
+```bash id="dep2"
+cd MFetch/ 
+```
+```bash id="dep2"
+sudo mv mfetch /usr/local/bin/
+```
+```bash id="dep2"
+mfetch 
+```
