@@ -86,7 +86,7 @@ A não ser que vocẽ use WSL
 ## Instalação
 
 ```bash id="dep2"
-git clone https://github.com/Ex3cutor76-V1/MFetch.git ``
+git clone https://github.com/Ex3cutor76-V1/MFetch.git
 ``` 
 ```bash id="dep2"
 cd MFetch/ 
