@@ -1,56 +1,127 @@
 #!/usr/bin/env bash
-AMARELO=$(tput setaf 11)
-VERDE=$(tput setaf 10)
-VERMELHO=$(tput setaf 9)
-AZUL=$(tput setaf 12)
-RESET=$(tput sgr0)
 
+#Cores
+AMARELO=$'\033[1;33m'
+VERDE=$'\033[1;32m'
+VERMELHO=$'\033[1;31m'
+AZUL=$'\033[1;34m'
+RESET=$'\033[0m'
+
+# Pacotes
 dpkg=$(dpkg --get-selections | wc -l)
 flatpak=$(flatpak list 2>/dev/null | wc -l)
-battery=$(cat /sys/class/power_supply/BAT0/capacity)
+
+# Bateria
+battery_path=$(find /sys/class/power_supply/ -name "BAT*" | head -n1)
+battery=$(cat "$battery_path/capacity" 2>/dev/null)
+
+# OS
+source /etc/os-release
+
+#SHELL
+SHELL_NAME=$(basename "$SHELL")
+
+# CPU
+CPU=$(awk -F': ' '/model name/ {print $2; exit}' /proc/cpuinfo)
+
+# RAM
+RAM=$(awk '/MemTotal/ {t=$2} /MemAvailable/ {a=$2} END {printf "%.1f/%.1f GB", (t-a)/1024/1024, t/1024/1024}' /proc/meminfo)
+
+# UP-TIME
+UP=$(awk '{print int($1/3600)"h "int(($1%3600)/60)"m"}' /proc/uptime)
+
+# Disk
+DISK=$(df -h / | awk 'NR==2 {print $3 " / " $2 " (" $5 ")"}')
+
+# WM
+WM=$(pgrep -l "i3|bspwm|openbox|sway" | head -n1 | awk '{print $2}')
+WM2=${WM:-${XDG_CURRENT_DESKTOP:-unknown}}
+
+# Arquitetura
+ARCH=$(uname -m)
+
+# Resolução
+RES=$(xrandr --current | awk '/\*/ {print $1; exit}')
+
+# Logo
 
 echo "=============================="
-echo "           ${AMARELO}MFetch${RESET}"
+printf "           ${AMARELO}MFetch${RESET}\n"
 echo "=============================="
 
-echo "${AZUL}User${RESET}: $USER@$(hostname)"
+# Informações
 
-echo "${AZUL}OS${RESET}: $(lsb_release -ds)"
+# Informações de User
+printf "${AZUL}User${RESET}: %s\n" "$USER@$(hostname)"
 
-echo "${AZUL}Kernel${RESET}:  $(uname -r)"
+# Informações do Sistema operacional
+printf "${AZUL}OS${RESET}: %s\n" "$PRETTY_NAME"
 
-echo "${AZUL}Packages${RESET}: dpkg $dpkg, flatpak $flatpak" 
+# Informações do Kernel
+printf "${AZUL}Kernel${RESET}: %s\n" "$(uname -r)"
 
-echo "${AZUL}Arquitetura${RESET}: $(uname -m)"
+# Informação da WM
+printf "${AZUL}WM${RESET}: %s\n" "$WM2"
 
-echo "${AZUL}Uptime${RESET}: $(uptime -p)"
+# Informações dos pacotes
+printf "${AZUL}Packages${RESET}: %s\n" "dpkg $dpkg, flatpak $flatpak"
 
-echo "${AZUL}Date${RESET}: $(date)"
+# Informações da arquitetura
+printf "${AZUL}Arquitetura${RESET}: %s\n" "$ARCH"
 
-echo "${AZUL}CPU${RESET}: $(awk -F': ' '/model name/ {print $2; exit}' /proc/cpuinfo)"
+# Informações do UPTIME
+printf "${AZUL}Uptime${RESET}: %s\n" "$UP"
 
-echo "${AZUL}Resolution${RESET}: $(xrandr | grep '*' | awk '{print $1}')"
+# Informações de data
+printf "${AZUL}Date${RESET}: %s\n" "$(date)"
 
-echo "${AZUL}RAM${RESET}: $(free -h | awk 'NR==2 {print $3 " / " $2}')"
+# Informações da CPU
+printf "${AZUL}CPU${RESET}: %s\n" "$CPU"
 
-echo "${AZUL}WiFi/Ethernet${RESET}: $(nmcli -t -f DEVICE,STATE,CONNECTION dev status | awk -F: '$2=="connected"{print $3; exit}')"
+# informações da Resolução
+printf "${AZUL}Resolution${RESET}: %s\n"  "$RES"
 
+# Informação da RAM
+printf "${AZUL}RAM${RESET}: %s\n" "$RAM"
+
+# Informação da rede wifi ou rede cabeada
+if command -v nmcli >/dev/null; then
+   WIFI=$(nmcli -t -f DEVICE,TYPE,STATE dev status | awk -F: '$2=="wifi" && $3=="connected"{print $1; exit}')
+   ETH=$(nmcli -t -f DEVICE,TYPE,STATE dev status | awk -F: '$2=="ethernet" && $3=="connected"{print $1; exit}')
+fi
+
+if [[ -n "$WIFI" ]]; then
+    NET="$WIFI"
+    printf "${AZUL}Rede${RESET}:  %s\n" "$NET"
+elif [[ -n "$ETH" ]]; then
+    NET2="$ETH"
+    printf "${AZUL}Rede${RESET}:  %s\n" "$NET2"
+else
+    NET3="Offline"
+    printf "${AZUL}Rede${RESET}:  %s\n" "$NET3"
+fi
+
+# Informação da rede tor via systemd
 if systemctl is-active --quiet tor@default 2>/dev/null; then
-    echo "${AZUL}Tor${RESET}: ${VERDE}ON${RESET}"
+    printf "${AZUL}Tor${RESET}: %s\n" "${VERDE}ON${RESET}"
 else
-    echo "${AZUL}Tor${RESET}: ${VERMELHO}OFF${RESET}"
+    printf "${AZUL}Tor${RESET}: %s\n" "${VERMELHO}OFF${RESET}"
 fi
 
+# informação da Bateria
 if [[ "$battery" -ge 75 ]]; then
-echo "${AZUL}Battery${RESET}: ${VERDE}$battery%${RESET}"
+    COLOR=$VERDE
 elif [[ "$battery" -ge 50 ]]; then
-echo "${AZUL}Battery${RESET}: ${AMARELO}$battery%${RESET}"
+    COLOR=$AMARELO
 else
-echo "${AZUL}Battery${RESET}: ${VERMELHO}$battery%${RESET}"
+    COLOR=$VERMELHO
 fi
+printf "${AZUL}Battery${RESET}: %s\n" "${COLOR}${battery}%${RESET}"
 
-echo "${AZUL}Shell${RESET}: $SHELL"
+# Informação do Shell
+printf "${AZUL}Shell${RESET}: %s\n" "$SHELL_NAME"
 
-echo "${AZUL}Disk${RESET}: $(df -h / | awk 'NR==2 {print $3 " / " $2 " (" $5 ")"}')"
+# Informação do Disco Rígido
+printf "${AZUL}Disk${RESET}: %s\n" "$DISK"
 
 echo "=============================="
