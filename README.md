@@ -31,7 +31,7 @@ A versão MFetch V2 agora permite que o user veja informações sobre a WM utili
 | Battery      | Nível da bateria |
 | Shell        | Shell em uso |
 | Disk         | Uso do disco |
-| WM           | Informação sobre |
+| WM           | Informação sobre Window Manager do sistema |
 ---
 
 ## Compatibilidade
